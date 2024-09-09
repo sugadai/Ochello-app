@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reversi</title>
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+      /* 2枚のcanvasを同じ場所に重ねるための設定 */
+      .canvas-wrap {
+        position: relative;
+        padding: 0;
+        box-sizing: content-box;
+      }
+      .canvas_warp:before {
+        content: "";
+        display: block;
+        padding-top: 50%;
+      }
+      .canvas-wrap > canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border: 0;
+        box-sizing: content-box;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Reversi</h1>
+    <div>
+      <!-- 黒と白の石の数を表示する-->
+      <span id="num"></span>
+      <!-- メッセージを表示する-->
+      <span id="msg"></span>
+      <!-- 「待った」ボタン-->
+      <button id="matta_btn" type="button">待った</button>
+      <!-- 「はじめから」ボタン-->
+      <button id="hajime_btn" type="button">はじめから</button><br />
+    </div>
+    <br />
+    <div class="canvas-wrap">
+      <!-- ボードを表示するためのcanvas-->
+      <canvas id="canvas1" width="500" height="500"></canvas>
+      <!-- 石などを表示するためのcanvas-->
+      <canvas id="canvas2" width="500" height="500"></canvas>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+    <script src="play.js"></script>
+  </body>
+</html>
