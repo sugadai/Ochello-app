@@ -64,22 +64,24 @@ function turnStone(i, j) {
     [1, 0],
     [1, 1],
   ];
-
+  console.log(c[0]);
   // let returnStones = [];
   // for (let i = 0; i < 8; i++) {
   //   returnStones[i] = 0;
   // }
   // console.log(c[3][1]);
   let judge = 0;
+  let ia = 0;
+  let jb = 0;
   if (peaces[i][j] === 1) {
     judge = -1;
   } else if (peaces[i][j] === -1) {
     judge = 1;
   }
   for (let n = 0; n < 8; n++) {
-    let ia = c[n][0];
-    let jb = c[n][1];
-    console.log(ja, " ", jb);
+    ia = c[n][0];
+    jb = c[n][1];
+    console.log(ja);
     if (peaces[ia][jb] !== 0 && peaces[ia][jb] !== peaces[i][j]) {
       // peacePraceReturn(c[0]);
       console.log(i, " ", j, " ", c[n]);

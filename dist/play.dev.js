@@ -63,13 +63,16 @@ function drawPeace(judgeX, judgeY, i, j) {
 
 function turnStone(i, j) {
   // console.log(i, j);
-  var c = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]; // let returnStones = [];
+  var c = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+  console.log(c[0]); // let returnStones = [];
   // for (let i = 0; i < 8; i++) {
   //   returnStones[i] = 0;
   // }
   // console.log(c[3][1]);
 
   var judge = 0;
+  var ia = 0;
+  var jb = 0;
 
   if (peaces[i][j] === 1) {
     judge = -1;
@@ -78,9 +81,9 @@ function turnStone(i, j) {
   }
 
   for (var n = 0; n < 8; n++) {
-    var ia = c[n][0];
-    var jb = c[n][1];
-    console.log(ja, " ", jb);
+    ia = c[n][0];
+    jb = c[n][1];
+    console.log(ja);
 
     if (peaces[ia][jb] !== 0 && peaces[ia][jb] !== peaces[i][j]) {
       // peacePraceReturn(c[0]);
