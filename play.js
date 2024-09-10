@@ -64,7 +64,7 @@ function turnStone(i, j) {
     [1, 0],
     [1, 1],
   ];
-  console.log(peaces[(i - 1, j - 1)]);
+
   // let returnStones = [];
   // for (let i = 0; i < 8; i++) {
   //   returnStones[i] = 0;
@@ -79,6 +79,7 @@ function turnStone(i, j) {
   for (let n = 0; n < 8; n++) {
     let ia = c[n][0];
     let jb = c[n][1];
+    console.log(ja, " ", jb);
     if (peaces[ia][jb] !== 0 && peaces[ia][jb] !== peaces[i][j]) {
       // peacePraceReturn(c[0]);
       console.log(i, " ", j, " ", c[n]);
