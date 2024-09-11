@@ -64,7 +64,17 @@ function drawPeace(judgeX, judgeY, i, j) {
 function turnStone(i, j) {
   // console.log(i, j);
   var c = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-  console.log(c[0]); // let returnStones = [];
+  var d = [];
+
+  for (var _i = 0; _i < 8; _i++) {
+    d[_i] = [];
+
+    for (var _j = 0; _j < 2; _j++) {
+      d[_i][_j] = 0;
+    }
+  }
+
+  console.log(d); // let returnStones = [];
   // for (let i = 0; i < 8; i++) {
   //   returnStones[i] = 0;
   // }
@@ -81,15 +91,26 @@ function turnStone(i, j) {
   }
 
   for (var n = 0; n < 8; n++) {
-    ia = c[n][0];
-    jb = c[n][1];
-    console.log(ja);
+    ia = i + c[n][0];
+    jb = j + c[n][1];
+    console.log(ia, " ", jb);
 
-    if (peaces[ia][jb] !== 0 && peaces[ia][jb] !== peaces[i][j]) {
+    if (peaces[ia][jb] === 0) {
       // peacePraceReturn(c[0]);
-      console.log(i, " ", j, " ", c[n]);
+      console.log("\u5EA7\u6A19[".concat(ia, ",").concat(jb, "]\u306F\u7A7A\u3067\u3059\u3002"));
+    } else if (peaces[ia][jb] === judge) {
+      console.log(c[n][0], c[n][1], "石の色が違います。");
+
+      while (peaces[ia][jb] === judge) {
+        d = [ia, jb];
+        ia += c[n][0];
+        jb += c[n][1];
+      }
+
+      console.log(d);
+      continue;
     } else {
-      console.log(i, " ", j, " ", c[n]);
+      console.log("石色が同じです。");
     }
   }
 }
