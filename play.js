@@ -64,19 +64,8 @@ function turnStone(i, j) {
     [1, 0],
     [1, 1],
   ];
-  let d = [];
-  for (let i = 0; i < 8; i++) {
-    d[i] = [];
-    for (let j = 0; j < 2; j++) {
-      d[i][j] = 0;
-    }
-  }
-  console.log(d);
-  // let returnStones = [];
-  // for (let i = 0; i < 8; i++) {
-  //   returnStones[i] = 0;
-  // }
-  // console.log(c[3][1]);
+
+  let returnStones = [];
   let judge = 0;
   let ia = 0;
   let jb = 0;
@@ -95,12 +84,15 @@ function turnStone(i, j) {
     } else if (peaces[ia][jb] === judge) {
       console.log(c[n][0], c[n][1], "石の色が違います。");
 
-      while (peaces[ia][jb] === judge) {
-        d = [ia, jb];
+      do {
+        returnStones.push([ia, jb]);
         ia += c[n][0];
         jb += c[n][1];
-      }
-      console.log(d);
+        console.log(ia, jb);
+        // if (peaces[ia][jb] === 0) d = "";
+      } while (peaces[ia][jb] === judge);
+
+      console.log(returnStones);
       continue;
     } else {
       console.log("石色が同じです。");
