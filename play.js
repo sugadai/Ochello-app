@@ -4,6 +4,7 @@
 // const canvas2 = document.getElementById("canvas2");
 // let { width, height } = canvas1; // canvasのwidthとheightを取得
 // let a = width / 8; // 1マスの一辺の長さ
+let turnPlarer = 1; //出番の初期化（黒の番から始まる）
 
 canvas2.addEventListener("click", function (e) {
   // console.log(e.layerX + " ", e.layerY);
@@ -28,9 +29,15 @@ canvas2.addEventListener("click", function (e) {
           console.log(judgeX, "< おいた石 <", judgeX + a);
           console.log(judgeY, "< おいた石 <", judgeY + b);
           // console.log(`${judgeX} ${judgeY}`);
-          peaces[i][j] = 1;
+          if (turnPlarer === 1) {
+            peaces[i][j] = 1;
+          } else if (turnPlarer === -1) {
+            peaces[i][j] = -1;
+          }
+
           console.log(peaces);
-          drawPeace(judgeX, judgeY, i, j);
+          console.log(turnPlarer);
+          drawPeace(judgeX, judgeY, i, j, turnPlarer);
 
           break;
         }
@@ -42,7 +49,7 @@ canvas2.addEventListener("click", function (e) {
   }
 });
 
-function drawPeace(judgeX, judgeY, i, j) {
+function drawPeace(judgeX, judgeY, i, j, turnPlarer) {
   // console.log(i, j);
 
   let ctx = canvas2.getContext("2d");
@@ -52,7 +59,12 @@ function drawPeace(judgeX, judgeY, i, j) {
   console.log(x, " ", y);
   ctx.beginPath(); // パスのリセット
   ctx.arc(x, y, r, 0, 2 * Math.PI, false);
-  ctx.fillStyle = "black"; // 塗る色を黒に
+  if (turnPlarer === 1) {
+    ctx.fillStyle = "black"; // 塗る色を黒に
+  } else if (turnPlarer === -1) {
+    ctx.fillStyle = "white"; // 塗る色を白に
+  }
+
   ctx.fill(); // 塗る
   turnStone(i, j);
 }
@@ -74,6 +86,7 @@ function turnStone(i, j) {
   let judge = 0;
   let ia = 0;
   let jb = 0;
+  console.log(peaces[i][j]);
   if (peaces[i][j] === 1) {
     judge = -1;
   } else if (peaces[i][j] === -1) {
@@ -95,10 +108,18 @@ function turnStone(i, j) {
         jb += c[n][1];
         // if (peaces[ia][jb] === 0) d = "";
       } while (peaces[ia][jb] === judge);
+      console.log(returnStones);
       if (peaces[ia][jb] === 0) {
         returnStones = [];
         console.log(returnStones);
       } else if (peaces[ia][jb] !== judge) {
+        // if (judge === 1) {
+        //   turnPlarer = -1;
+        // } else if (judge === 1) {
+        //   turnPlarer = -1;
+        // }
+        turnPlarer = judge;
+        console.log("次は", turnPlarer, "の番です。");
         returnStones.forEach((element) => {
           if (peaces[element[0]][element[1]] === 1) {
             peaces[element[0]][element[1]] = -1;
@@ -135,6 +156,35 @@ function peacePraceReturn(returnStones) {
     }
     ctx.fill(); // 塗る
     console.log(peaces);
-    turnStone(element[0], element[1]);
+    winnerCheck();
+    // turnStone(element[0], element[1]);
   });
+}
+
+function winnerCheck() {
+  let winnerJudge = 0;
+  winnerJudgeCheckFinish: for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (peaces[i][j] === 1) {
+        winnerJudge = 1;
+        break winnerJudgeCheckFinish;
+      } else if (peaces[i][j] === -1) {
+        winnerJudge = -1;
+        break winnerJudgeCheckFinish;
+      }
+    }
+  }
+  console.log(winnerJudge);
+  winnerCheckFinish: for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (peaces[i][j] !== winnerJudge && peaces[i][j] !== 0) {
+        console.log(i, " ", j, "石が埋まっていませんゲームを続行してください");
+        winnerJudge = 0;
+        break winnerCheckFinish;
+      }
+    }
+  }
+  if (winnerJudge !== 0) {
+    console.log("石が全て", winnerJudge, "で埋まりました。");
+  }
 }
