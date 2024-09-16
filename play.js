@@ -6,7 +6,7 @@
 // let a = width / 8; // 1マスの一辺の長さ
 
 canvas2.addEventListener("click", function (e) {
-  console.log(e.layerX + " ", e.layerY);
+  // console.log(e.layerX + " ", e.layerY);
   let judge = false;
   for (let i = 0; i < 8; i++) {
     console.log(`iは${i}`);
@@ -19,6 +19,11 @@ canvas2.addEventListener("click", function (e) {
         console.log(`X軸は${e.layerX}の位置をクリックしました`);
         if (judgeY < e.layerY && judgeY + b > e.layerY) {
           console.log(`Y軸は${e.layerY}の位置をクリックしました`);
+          if (peaces[i][j] !== 0) {
+            console.log(`クリック位置[${i},${j}]には既に石があります`);
+            return;
+          }
+          console.log(i, j);
           judge = true;
           console.log(judgeX, "< おいた石 <", judgeX + a);
           console.log(judgeY, "< おいた石 <", judgeY + b);
@@ -82,17 +87,28 @@ function turnStone(i, j) {
       // peacePraceReturn(c[0]);
       console.log(`座標[${ia},${jb}]は空です。`);
     } else if (peaces[ia][jb] === judge) {
-      console.log(c[n][0], c[n][1], "石の色が違います。");
+      console.log(ia, " ", jb, "石の色が違います。");
 
       do {
         returnStones.push([ia, jb]);
         ia += c[n][0];
         jb += c[n][1];
-        console.log(ia, jb);
         // if (peaces[ia][jb] === 0) d = "";
       } while (peaces[ia][jb] === judge);
+      if (peaces[ia][jb] === 0) {
+        returnStones = [];
+        console.log(returnStones);
+      } else if (peaces[ia][jb] !== judge) {
+        returnStones.forEach((element) => {
+          if (peaces[element[0]][element[1]] === 1) {
+            peaces[element[0]][element[1]] = -1;
+          } else if (peaces[element[0]][element[1]] === -1) {
+            peaces[element[0]][element[1]] = 1;
+          }
+        });
+        peacePraceReturn(returnStones);
+      }
 
-      console.log(returnStones);
       continue;
     } else {
       console.log("石色が同じです。");
@@ -100,6 +116,25 @@ function turnStone(i, j) {
   }
 }
 
-function peacePraceReturn(c) {
-  console.log(c);
+function peacePraceReturn(returnStones) {
+  returnStones.forEach((element) => {
+    console.log(peaces[element[0]][element[1]]);
+    let judgeX = a * element[1];
+    let judgeY = a * element[0];
+    let ctx = canvas2.getContext("2d");
+    let x = judgeX + a / 2; //X軸
+    let y = judgeY + b / 2; //Y軸
+    let r = a * 0.4; // 半径
+    // console.log(x, " ", y);
+    ctx.beginPath(); // パスのリセット
+    ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+    if (peaces[element[0]][element[1]] === 1) {
+      ctx.fillStyle = "black"; // 塗る色を黒に
+    } else if (peaces[element[0]][element[1]] === -1) {
+      ctx.fillStyle = "white";
+    }
+    ctx.fill(); // 塗る
+    console.log(peaces);
+    turnStone(element[0], element[1]);
+  });
 }
