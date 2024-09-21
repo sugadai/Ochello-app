@@ -20,7 +20,7 @@ function playerChange(turnPlarer) {
 }
 
 canvas2.addEventListener("click", function (e) {
-  // console.log(e.layerX + " ", e.layerY);
+  console.log(turnPlarer);
   let judge = false;
   for (let i = 0; i < 8; i++) {
     console.log(`iは${i}`);
@@ -37,20 +37,20 @@ canvas2.addEventListener("click", function (e) {
             console.log(`クリック位置[${i},${j}]には既に石があります`);
             return;
           }
-          console.log(i, j);
+          console.log(judgeX, " ", judgeY);
           judge = true;
           console.log(judgeX, "< おいた石 <", judgeX + a);
           console.log(judgeY, "< おいた石 <", judgeY + b);
           // console.log(`${judgeX} ${judgeY}`);
-          if (turnPlarer === 1) {
-            peaces[i][j] = 1;
-          } else if (turnPlarer === -1) {
-            peaces[i][j] = -1;
-          }
-
-          console.log(peaces);
-          console.log(turnPlarer);
-          drawPeace(judgeX, judgeY, i, j, turnPlarer);
+          // if (turnPlarer === 1) {
+          //   peaces[i][j] = 1;
+          // } else if (turnPlarer === -1) {
+          //   peaces[i][j] = -1;
+          // }
+          turnStone(i, j, judgeX, judgeY, turnPlarer);
+          // console.log(peaces);
+          // console.log(turnPlarer);
+          // drawPeace(judgeX, judgeY, i, j, turnPlarer);
 
           break;
         }
@@ -62,7 +62,7 @@ canvas2.addEventListener("click", function (e) {
   }
 });
 
-function drawPeace(judgeX, judgeY, i, j, turnPlarer) {
+function drawPeace(judgeX, judgeY, turnPlarer) {
   // console.log(i, j);
 
   let ctx = canvas2.getContext("2d");
@@ -79,11 +79,10 @@ function drawPeace(judgeX, judgeY, i, j, turnPlarer) {
   }
 
   ctx.fill(); // 塗る
-  turnStone(i, j);
+  // turnStone(i, j);
 }
 
-function turnStone(i, j) {
-  // console.log(i, j);
+function turnStone(i, j, judgeX, judgeY, turnPlarer) {
   let c = [
     [-1, -1],
     [-1, 0],
@@ -100,9 +99,9 @@ function turnStone(i, j) {
   let ia = 0;
   let jb = 0;
   console.log(peaces[i][j]);
-  if (peaces[i][j] === 1) {
+  if (turnPlarer === 1) {
     judge = -1;
-  } else if (peaces[i][j] === -1) {
+  } else if (turnPlarer === -1) {
     judge = 1;
   }
   for (let n = 0; n < 8; n++) {
@@ -140,9 +139,7 @@ function turnStone(i, j) {
           // } else if (judge === 1) {
           //   turnPlarer = -1;
           // }
-          turnPlarer = judge;
-          playerChange(turnPlarer);
-          console.log("次は", turnPlarer, "の番です。");
+
           returnStones.forEach((element) => {
             console.log(element[0], " ", element[1]);
             if (peaces[element[0]][element[1]] === 1) {
@@ -166,9 +163,18 @@ function turnStone(i, j) {
               peaces[element[0]][element[1]] = 1;
             }
           });
-
-          console.log(peaces);
-          peacePraceReturn(returnStones);
+          if (turnPlarer === 1) {
+            peaces[i][j] = 1;
+          } else if (turnPlarer === -1) {
+            peaces[i][j] = -1;
+          }
+          console.log("a");
+          drawPeace(judgeX, judgeY, turnPlarer);
+          turnPlarer = judge;
+          playerChange(turnPlarer);
+          console.log("次は", turnPlarer, "の番です。");
+          console.log(turnPlarer);
+          peacePraceReturn(returnStones, turnPlarer);
           returnStones = [];
         }
 
@@ -180,15 +186,16 @@ function turnStone(i, j) {
   }
 }
 
-function peacePraceReturn(returnStones) {
+function peacePraceReturn(returnStones, turnPlarer) {
+  console.log(turnPlarer);
   returnStones.forEach((element) => {
-    console.log(
-      element[0],
-      " ",
-      element[1],
-      " ",
-      peaces[element[0]][element[1]]
-    );
+    // console.log(
+    //   element[0],
+    //   " ",
+    //   element[1],
+    //   " ",
+    //   peaces[element[0]][element[1]]
+    // );
     let judgeX = a * element[1];
     let judgeY = a * element[0];
     let ctx = canvas2.getContext("2d");
@@ -204,13 +211,14 @@ function peacePraceReturn(returnStones) {
       ctx.fillStyle = "white";
     }
     ctx.fill(); // 塗る
-    console.log(peaces);
-    winnerCheck();
+    console.log(turnPlarer);
+    winnerCheck(turnPlarer);
     // turnStone(element[0], element[1]);
   });
 }
 
-function winnerCheck() {
+function winnerCheck(turnPlarer) {
+  console.log(turnPlarer);
   let winnerJudge = 0;
   winnerJudgeCheckFinish: for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
@@ -223,7 +231,7 @@ function winnerCheck() {
       }
     }
   }
-  console.log(winnerJudge);
+  // console.log(winnerJudge);
   winnerCheckFinish: for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       if (peaces[i][j] !== winnerJudge && peaces[i][j] !== 0) {
