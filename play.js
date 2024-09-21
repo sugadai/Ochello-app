@@ -5,6 +5,19 @@
 // let { width, height } = canvas1; // canvasのwidthとheightを取得
 // let a = width / 8; // 1マスの一辺の長さ
 let turnPlarer = 1; //出番の初期化（黒の番から始まる）
+let plaer = document.getElementById("turn-player");
+plaer.textContent = "黒のターンです";
+let optionmsg = document.getElementById("error-msg");
+console.log(optionmsg);
+
+function playerChange(turnPlarer) {
+  let plaer = document.getElementById("turn-player");
+  if (turnPlarer === 1) {
+    plaer.textContent = "黒のターンです";
+  } else if (turnPlarer === -1) {
+    plaer.textContent = "白のターンです";
+  }
+}
 
 canvas2.addEventListener("click", function (e) {
   // console.log(e.layerX + " ", e.layerY);
@@ -96,50 +109,86 @@ function turnStone(i, j) {
     ia = i + c[n][0];
     jb = j + c[n][1];
     console.log(ia, " ", jb);
-    if (peaces[ia][jb] === 0) {
-      // peacePraceReturn(c[0]);
-      console.log(`座標[${ia},${jb}]は空です。`);
-    } else if (peaces[ia][jb] === judge) {
-      console.log(ia, " ", jb, "石の色が違います。");
-
-      do {
-        returnStones.push([ia, jb]);
-        ia += c[n][0];
-        jb += c[n][1];
-        // if (peaces[ia][jb] === 0) d = "";
-      } while (peaces[ia][jb] === judge);
-      console.log(returnStones);
-      if (peaces[ia][jb] === 0) {
-        returnStones = [];
-        console.log(returnStones);
-      } else if (peaces[ia][jb] !== judge) {
-        // if (judge === 1) {
-        //   turnPlarer = -1;
-        // } else if (judge === 1) {
-        //   turnPlarer = -1;
-        // }
-        turnPlarer = judge;
-        console.log("次は", turnPlarer, "の番です。");
-        returnStones.forEach((element) => {
-          if (peaces[element[0]][element[1]] === 1) {
-            peaces[element[0]][element[1]] = -1;
-          } else if (peaces[element[0]][element[1]] === -1) {
-            peaces[element[0]][element[1]] = 1;
-          }
-        });
-        peacePraceReturn(returnStones);
-      }
-
+    if (peaces.hasOwnProperty(ia, jb) === false) {
+      console.log(ia, " ", jb, " この座標はありません。");
       continue;
     } else {
-      console.log("石色が同じです。");
+      if (peaces[ia][jb] === 0) {
+        // peacePraceReturn(c[0]);
+        console.log(`座標[${ia},${jb}]は空です。`);
+      } else if (peaces[ia][jb] === judge) {
+        console.log(ia, " ", jb, "石の色が違います。");
+
+        do {
+          returnStones.push([ia, jb]);
+          console.log(ia, " ", jb);
+          ia += c[n][0];
+          jb += c[n][1];
+          if (peaces.hasOwnProperty(ia, jb) === false) {
+            console.log(ia, " ", jb, " この座標はありません。");
+            return;
+          }
+        } while (peaces[ia][jb] === judge);
+        console.log(returnStones);
+        if (peaces[ia][jb] === 0) {
+          returnStones = [];
+          console.log(returnStones);
+        } else if (peaces[ia][jb] !== judge) {
+          console.log(ia, " ", jb, " ", peaces[ia][jb]);
+          // if (judge === 1) {
+          //   turnPlarer = -1;
+          // } else if (judge === 1) {
+          //   turnPlarer = -1;
+          // }
+          turnPlarer = judge;
+          playerChange(turnPlarer);
+          console.log("次は", turnPlarer, "の番です。");
+          returnStones.forEach((element) => {
+            console.log(element[0], " ", element[1]);
+            if (peaces[element[0]][element[1]] === 1) {
+              peaces[element[0]][element[1]] = -1;
+              console.log(
+                element[0],
+                " ",
+                element[1],
+                " ",
+                peaces[element[0]][element[1]]
+              );
+            } else if (peaces[element[0]][element[1]] === -1) {
+              console.log(peaces[element[0]][element[1]]);
+              console.log(
+                element[0],
+                " ",
+                element[1],
+                " ",
+                peaces[element[0]][element[1]]
+              );
+              peaces[element[0]][element[1]] = 1;
+            }
+          });
+
+          console.log(peaces);
+          peacePraceReturn(returnStones);
+          returnStones = [];
+        }
+
+        continue;
+      } else {
+        console.log("石色が同じです。");
+      }
     }
   }
 }
 
 function peacePraceReturn(returnStones) {
   returnStones.forEach((element) => {
-    console.log(peaces[element[0]][element[1]]);
+    console.log(
+      element[0],
+      " ",
+      element[1],
+      " ",
+      peaces[element[0]][element[1]]
+    );
     let judgeX = a * element[1];
     let judgeY = a * element[0];
     let ctx = canvas2.getContext("2d");
