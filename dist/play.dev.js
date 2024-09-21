@@ -116,7 +116,7 @@ function turnStone(i, j) {
     jb = j + c[n][1];
     console.log(ia, " ", jb);
 
-    if (peaces.hasOwnProperty(ia, jb) === false) {
+    if (ia < 0 || jb < 0 || ia > 7 || jb > 7) {
       console.log(ia, " ", jb, " この座標はありません。");
       continue;
     } else {
@@ -132,7 +132,7 @@ function turnStone(i, j) {
           ia += c[n][0];
           jb += c[n][1];
 
-          if (peaces.hasOwnProperty(ia, jb) === false) {
+          if (ia < 0 || jb < 0 || ia > 7 || jb > 7) {
             console.log(ia, " ", jb, " この座標はありません。");
             return;
           }
