@@ -6,20 +6,18 @@
 // const canvas2 = document.getElementById("canvas2");
 // let { width, height } = canvas1; // canvasのwidthとheightを取得
 // let a = width / 8; // 1マスの一辺の長さ
+console.log("b");
 var turnPlarer = 1; //出番の初期化（黒の番から始まる）
 
-var plaer = document.getElementById("turn-player");
-plaer.textContent = "黒のターンです";
-var optionmsg = document.getElementById("error-msg");
-console.log(optionmsg);
+var player = document.getElementById("turn-player");
+player.textContent = "黒のターンです";
+var optionmsg = document.getElementById("error-msg"); // console.log(optionmsg);
 
 function playerChange(turnPlarer) {
-  var plaer = document.getElementById("turn-player");
-
   if (turnPlarer === 1) {
-    plaer.textContent = "黒のターンです";
+    player.textContent = "黒のターンです";
   } else if (turnPlarer === -1) {
-    plaer.textContent = "白のターンです";
+    player.textContent = "白のターンです";
   }
 }
 
@@ -56,11 +54,10 @@ canvas2.addEventListener("click", function (e) {
           //   peaces[i][j] = -1;
           // }
 
-          turnStone(i, j, judgeX, judgeY, turnPlarer); // console.log(peaces);
+          turnStone(i, j, judgeX, judgeY); // console.log(peaces);
           // console.log(turnPlarer);
           // drawPeace(judgeX, judgeY, i, j, turnPlarer);
-
-          break;
+          // break;
         }
       } else {
         continue;
@@ -95,9 +92,11 @@ function drawPeace(judgeX, judgeY, turnPlarer) {
   // turnStone(i, j);
 }
 
-function turnStone(i, j, judgeX, judgeY, turnPlarer) {
+function turnStone(i, j, judgeX, judgeY) {
   var c = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+  console.log(turnPlarer);
   var returnStones = [];
+  var innerStones = [];
   var judge = 0;
   var ia = 0;
   var jb = 0;
@@ -120,12 +119,13 @@ function turnStone(i, j, judgeX, judgeY, turnPlarer) {
     } else {
       if (peaces[ia][jb] === 0) {
         // peacePraceReturn(c[0]);
+        console.log(turnPlarer);
         console.log("\u5EA7\u6A19[".concat(ia, ",").concat(jb, "]\u306F\u7A7A\u3067\u3059\u3002"));
       } else if (peaces[ia][jb] === judge) {
         console.log(ia, " ", jb, "石の色が違います。");
 
         do {
-          returnStones.push([ia, jb]);
+          innerStones.push([ia, jb]);
           console.log(ia, " ", jb);
           ia += c[n][0];
           jb += c[n][1];
@@ -136,46 +136,17 @@ function turnStone(i, j, judgeX, judgeY, turnPlarer) {
           }
         } while (peaces[ia][jb] === judge);
 
-        console.log(returnStones);
+        console.log(innerStones);
 
         if (peaces[ia][jb] === 0) {
-          returnStones = [];
-          console.log(returnStones);
+          innerStones = [];
         } else if (peaces[ia][jb] !== judge) {
-          console.log(ia, " ", jb, " ", peaces[ia][jb]); // if (judge === 1) {
-          //   turnPlarer = -1;
-          // } else if (judge === 1) {
-          //   turnPlarer = -1;
-          // }
-
-          returnStones.forEach(function (element) {
-            console.log(element[0], " ", element[1]);
-
-            if (peaces[element[0]][element[1]] === 1) {
-              peaces[element[0]][element[1]] = -1;
-              console.log(element[0], " ", element[1], " ", peaces[element[0]][element[1]]);
-            } else if (peaces[element[0]][element[1]] === -1) {
-              console.log(peaces[element[0]][element[1]]);
-              console.log(element[0], " ", element[1], " ", peaces[element[0]][element[1]]);
-              peaces[element[0]][element[1]] = 1;
-            }
+          innerStones.forEach(function (element) {
+            returnStones.push(element);
           });
+          innerStones = [];
+        } // returnStones = [];
 
-          if (turnPlarer === 1) {
-            peaces[i][j] = 1;
-          } else if (turnPlarer === -1) {
-            peaces[i][j] = -1;
-          }
-
-          console.log("a");
-          drawPeace(judgeX, judgeY, turnPlarer);
-          turnPlarer = judge;
-          playerChange(turnPlarer);
-          console.log("次は", turnPlarer, "の番です。");
-          console.log(turnPlarer);
-          peacePraceReturn(returnStones, turnPlarer);
-          returnStones = [];
-        }
 
         continue;
       } else {
@@ -183,18 +154,40 @@ function turnStone(i, j, judgeX, judgeY, turnPlarer) {
       }
     }
   }
+
+  returnStones.forEach(function (element) {
+    console.log(element[0], " ", element[1]);
+
+    if (peaces[element[0]][element[1]] === 1) {
+      console.log(peaces);
+      peaces[element[0]][element[1]] = -1;
+      console.log(element[0], " ", element[1], " ", peaces[element[0]][element[1]]);
+    } else if (peaces[element[0]][element[1]] === -1) {
+      console.log(peaces[element[0]][element[1]]);
+      console.log(element[0], " ", element[1], " ", peaces[element[0]][element[1]]);
+      peaces[element[0]][element[1]] = 1;
+    }
+  });
+
+  if (turnPlarer === 1) {
+    peaces[i][j] = 1;
+  } else if (turnPlarer === -1) {
+    peaces[i][j] = -1;
+  }
+
+  console.log(peaces);
+  drawPeace(judgeX, judgeY, turnPlarer);
+  turnPlarer = judge;
+  console.log("次は", turnPlarer, "の番です。");
+  peacePraceReturn(returnStones);
+  console.log(turnPlarer);
+  returnStones = [];
 }
 
-function peacePraceReturn(returnStones, turnPlarer) {
-  console.log(turnPlarer);
+function peacePraceReturn(returnStones) {
+  console.log(peaces);
   returnStones.forEach(function (element) {
-    // console.log(
-    //   element[0],
-    //   " ",
-    //   element[1],
-    //   " ",
-    //   peaces[element[0]][element[1]]
-    // );
+    console.log(element[0], " ", element[1], " ", peaces[element[0]][element[1]]);
     var judgeX = a * element[1];
     var judgeY = a * element[0];
     var ctx = canvas2.getContext("2d");
@@ -217,13 +210,12 @@ function peacePraceReturn(returnStones, turnPlarer) {
 
     ctx.fill(); // 塗る
 
-    console.log(turnPlarer);
-    winnerCheck(turnPlarer); // turnStone(element[0], element[1]);
+    winnerCheck(); // turnStone(element[0], element[1]);
   });
 }
 
-function winnerCheck(turnPlarer) {
-  console.log(turnPlarer);
+function winnerCheck() {
+  // console.log(turnPlarer);
   var winnerJudge = 0;
 
   winnerJudgeCheckFinish: for (var i = 0; i < 8; i++) {
@@ -236,8 +228,7 @@ function winnerCheck(turnPlarer) {
         break winnerJudgeCheckFinish;
       }
     }
-  } // console.log(winnerJudge);
-
+  }
 
   winnerCheckFinish: for (var _i = 0; _i < 8; _i++) {
     for (var _j = 0; _j < 8; _j++) {
