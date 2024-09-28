@@ -147,7 +147,10 @@ function turnStone(i, j, judgeX, judgeY) {
       }
     }
   }
-
+  if (returnStones.length === 0) {
+    console.log(returnStones.length, "返せる石がありません");
+    return;
+  }
   returnStones.forEach((element) => {
     console.log(element[0], " ", element[1]);
     if (peaces[element[0]][element[1]] === 1) {
@@ -180,6 +183,7 @@ function turnStone(i, j, judgeX, judgeY) {
   console.log(peaces);
   drawPeace(judgeX, judgeY, turnPlarer);
   turnPlarer = judge;
+  playerChange(turnPlarer);
   console.log("次は", turnPlarer, "の番です。");
   peacePraceReturn(returnStones);
   console.log(turnPlarer);
