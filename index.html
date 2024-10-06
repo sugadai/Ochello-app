@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Reversi</title>
     <style>
       body {
@@ -30,9 +31,10 @@
         margin: 0;
       }
     </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Reversi</h1>
+    <h1>オセロゲーム</h1>
     <div>
       <!-- 黒と白の石の数を表示する-->
       <span id="num"></span>
@@ -42,8 +44,8 @@
       <button id="matta_btn" type="button">待った</button>
       <!-- 「はじめから」ボタン-->
       <button id="hajime_btn" type="button">はじめから</button><br />
-      <p id="turn-player">plaers</p>
-      <p id="error-msg">This is error msg</p>
+      <h3 id="turn-player"></h3>
+      <h3 id="error-msg"></h3>
     </div>
     <br />
     <div class="canvas-wrap">
@@ -51,6 +53,13 @@
       <canvas id="canvas1" width="500" height="500"></canvas>
       <!-- 石などを表示するためのcanvas-->
       <canvas id="canvas2" width="500" height="500"></canvas>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <p>ゲームを初期化してもよろしいですか？</p>
+        <button id="game_reset">はい</button>
+        <button id="game_no_reset">いいえ</button>
+      </div>
     </div>
     <script type="text/javascript" src="script.js"></script>
     <script src="play.js"></script>

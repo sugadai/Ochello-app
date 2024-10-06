@@ -6,12 +6,17 @@
 // const canvas2 = document.getElementById("canvas2");
 // let { width, height } = canvas1; // canvasのwidthとheightを取得
 // let a = width / 8; // 1マスの一辺の長さ
-console.log("b");
+var optionmsg = document.getElementById("error-msg");
+var hajime_btn = document.getElementById("hajime_btn");
 var turnPlarer = 1; //出番の初期化（黒の番から始まる）
 
 var player = document.getElementById("turn-player");
 player.textContent = "黒のターンです";
-var optionmsg = document.getElementById("error-msg"); // console.log(optionmsg);
+var errorMsg = "";
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("modalBtn");
+var span = document.getElementsByClassName("close")[0];
+var game_reset_btn = document.getElementById("game_reset"); // console.log(optionmsg);
 
 function playerChange(turnPlarer) {
   if (turnPlarer === 1) {
@@ -21,6 +26,13 @@ function playerChange(turnPlarer) {
   }
 }
 
+hajime_btn.addEventListener("click", function () {
+  modal.style.display = "block";
+});
+game_reset_btn.addEventListener("click", function () {
+  resetGame();
+  modal.style.display = "none";
+});
 canvas2.addEventListener("click", function (e) {
   console.log(turnPlarer);
   var judge = false;
@@ -41,6 +53,8 @@ canvas2.addEventListener("click", function (e) {
 
           if (peaces[i][j] !== 0) {
             console.log("\u30AF\u30EA\u30C3\u30AF\u4F4D\u7F6E[".concat(i, ",").concat(j, "]\u306B\u306F\u65E2\u306B\u77F3\u304C\u3042\u308A\u307E\u3059"));
+            errorMsg = "\u30AF\u30EA\u30C3\u30AF\u4F4D\u7F6E\u306B\u306F\u65E2\u306B\u77F3\u304C\u3042\u308A\u307E\u3059";
+            errorMsgFun(errorMsg);
             return;
           }
 
@@ -116,50 +130,57 @@ function turnStone(i, j, judgeX, judgeY) {
     if (ia < 0 || jb < 0 || ia > 7 || jb > 7) {
       console.log(ia, " ", jb, " この座標はありません。");
       continue;
-    } else {
+    } else if (peaces[ia][jb] === 0) {
+      // peacePraceReturn(c[0]);
+      console.log(turnPlarer);
+      console.log("\u5EA7\u6A19[".concat(ia, ",").concat(jb, "]\u306F\u7A7A\u3067\u3059\u3002"));
+      continue;
+    } else if (peaces[ia][jb] === judge) {
+      console.log(ia, " ", jb, "石の色が違います。");
+      var ia_1 = ia;
+      var jb_2 = jb;
+
+      do {
+        innerStones.push([ia, jb]);
+        console.log(ia, " ", jb);
+        ia_1 += c[n][0];
+        jb_2 += c[n][1];
+
+        if (ia_1 < 0 || jb_2 < 0 || ia_1 > 7 || jb_2 > 7) {
+          innerStones = [];
+          break;
+        }
+
+        ia = ia_1;
+        jb = jb_2;
+      } while (peaces[ia][jb] === judge);
+
+      console.log(innerStones);
+
       if (peaces[ia][jb] === 0) {
-        // peacePraceReturn(c[0]);
-        console.log(turnPlarer);
-        console.log("\u5EA7\u6A19[".concat(ia, ",").concat(jb, "]\u306F\u7A7A\u3067\u3059\u3002"));
-      } else if (peaces[ia][jb] === judge) {
-        console.log(ia, " ", jb, "石の色が違います。");
-
-        do {
-          innerStones.push([ia, jb]);
-          console.log(ia, " ", jb);
-          ia += c[n][0];
-          jb += c[n][1];
-
-          if (ia < 0 || jb < 0 || ia > 7 || jb > 7) {
-            console.log(ia, " ", jb, " この座標はありません。");
-            return;
-          }
-        } while (peaces[ia][jb] === judge);
-
-        console.log(innerStones);
-
-        if (peaces[ia][jb] === 0) {
-          innerStones = [];
-        } else if (peaces[ia][jb] !== judge) {
-          innerStones.forEach(function (element) {
-            returnStones.push(element);
-          });
-          innerStones = [];
-        } // returnStones = [];
+        innerStones = [];
+      } else if (peaces[ia][jb] !== judge && innerStones.length !== 0) {
+        innerStones.forEach(function (element) {
+          returnStones.push(element);
+        });
+        innerStones = [];
+      } // returnStones = [];
 
 
-        continue;
-      } else {
-        console.log("石色が同じです。");
-      }
+      continue;
+    } else {
+      console.log("石色が同じです。");
     }
   }
 
   if (returnStones.length === 0) {
-    console.log(returnStones.length, "返せる石がありません");
+    console.log(returnStones.length, "そこに石を置いても返せる石がありません");
+    errorMsg = "そこ石を置いても返せる石がありません";
+    errorMsgFun(errorMsg);
     return;
   }
 
+  optionmsg.textContent = "";
   returnStones.forEach(function (element) {
     console.log(element[0], " ", element[1]);
 
@@ -223,6 +244,8 @@ function peacePraceReturn(returnStones) {
 function winnerCheck() {
   // console.log(turnPlarer);
   var winnerJudge = 0;
+  var whiteCount = 0;
+  var blackCount = 0;
 
   winnerJudgeCheckFinish: for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 8; j++) {
@@ -248,6 +271,40 @@ function winnerCheck() {
 
   if (winnerJudge !== 0) {
     console.log("石が全て", winnerJudge, "で埋まりました。");
+  } else {
+    for (var _i2 = 0; _i2 < 8; _i2++) {
+      for (var _j2 = 0; _j2 < 8; _j2++) {
+        if (peaces[_i2][_j2] === 1) {
+          blackCount++;
+        } else if (peaces[_i2][_j2] === -1) {
+          whiteCount++;
+        }
+      }
+    }
   }
+}
+
+function errorMsgFun(msg) {
+  optionmsg.textContent = msg;
+  optionmsg.style.color = "red";
+  errorMsg = "";
+}
+
+function resetGame() {
+  console.log("gfas");
+  turnPlarer = 1;
+  playerChange(turnPlarer);
+
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      peaces[i][j] = 0;
+    }
+  }
+
+  var ctx1 = canvas1.getContext("2d");
+  var ctx2 = canvas2.getContext("2d");
+  ctx1.clearRect(0, 0, width, height);
+  ctx2.clearRect(0, 0, width, height);
+  drawBoard();
 }
 //# sourceMappingURL=play.dev.js.map
